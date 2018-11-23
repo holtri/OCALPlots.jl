@@ -1,5 +1,9 @@
 module OCALPlots
 
-greet() = print("Hello World!")
+using RecipesBase
+using SVDD, OneClassActiveLearning
+using MLLabelUtils
 
-end # module
+include("svdd_plots.jl")
+
+end

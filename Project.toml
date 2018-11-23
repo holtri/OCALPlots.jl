@@ -4,6 +4,7 @@ authors = ["Holger <holger.trittenbach@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+MLLabelUtils = "66a33bbf-0c2b-5fc8-a008-9da813334f0a"
 OneClassActiveLearning = "86a29cbe-e10f-11e8-3785-c18b489c508a"
 RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 SVDD = "83536b18-e0df-11e8-1e3f-f991e449cee4"
