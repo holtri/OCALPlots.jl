@@ -25,7 +25,7 @@ end
     grid_range, grid_data = get_grid(extrema(m.data)..., grid_resolution, axis_overhang)
     grid_scores = reshape(SVDD.predict(m, grid_data), grid_resolution, grid_resolution)
     data_class = SVDD.classify.(SVDD.predict(m, m.data))
-
+    title := "Decision Boundary"
     @series begin
         seriestype := :contourf
         seriescolor --> :greens
@@ -67,6 +67,7 @@ end
 
     data_pools = fill(:U, size(m.data,2))
     query_object = OneClassActiveLearning.get_query_object(qs, m.data, data_pools, collect(1:size(m.data,2)), history)
+    title := "Query Scores (Selected ID: $query_object)"
 
     cbar := false
     @series begin
@@ -110,6 +111,7 @@ end
     markeralpha --> 0.7
     colors = (U = :grey, Lin = :blue, Lout = :red)
     shapes = (U = :circle, Lin = :square, Lout = :square)
+    title := "Pools"
 
     for (k,v) in poolmap
         @series begin
@@ -118,5 +120,25 @@ end
             markershape := shapes[k]
             OCALPlots.split_2d_array(m.data, [i ∈ v for i in 1:size(m.data,2)])
         end
+    end
+end
+
+@recipe function f(m::SVDD.SVDDClassifier, qs::OneClassActiveLearning.ModelBasedPQs, history, labels::Vector{Symbol}, poolmap::Dict{Symbol, Vector{Int}})
+    layout := @layout [a{0.5w, 1.0h} b{0.5w, 0.5h}
+                       _ c{0.5w, 0.5h} ]
+    legend --> :topright
+    @series begin
+       subplot := 1
+       (m, labels)
+    end
+
+    @series begin
+        subplot := 2
+       (m, qs, history)
+    end
+
+    @series begin
+        subplot := 3
+       (m, poolmap)
     end
 end
