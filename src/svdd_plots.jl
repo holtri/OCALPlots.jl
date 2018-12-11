@@ -142,3 +142,45 @@ end
        (m, poolmap)
     end
 end
+
+@recipe function plot_svdd(m::SVDD.SubSVDD, labels::Vector{Symbol}, subspace_idx; grid_resolution = 100, axis_overhang = 0.2)
+    data = m.data[m.subspaces[subspace_idx], :]
+    grid_range, grid_data = OCALPlots.get_grid(extrema(data)..., grid_resolution, axis_overhang)
+    grid_scores = reshape(SVDD.predict(m, grid_data, subspace_idx), grid_resolution, grid_resolution)
+    data_class = SVDD.classify.(SVDD.predict(m, data, subspace_idx))
+
+    title --> "Subspace $(m.subspaces[subspace_idx])"
+    @series begin
+        seriestype := :contourf
+        seriescolor --> :greens
+        levels := range(0, maximum(grid_scores), length=10)
+        grid_range, grid_range, grid_scores
+    end
+
+    colors = (inlier = :blue, outlier = :red)
+    shapes = (inlier = :circle, outlier = :star8)
+
+    markeralpha --> 0.7
+    markersize --> 5
+
+    for l in [:inlier, :outlier]
+        markercolor := colors[l]
+        for dc in [:inlier, :outlier]
+            markershape := shapes[dc]
+            @series begin
+                seriestype := :scatter
+                label := OCALPlots.get_legend_text(l, dc)
+                OCALPlots.split_2d_array(data, (labels.==l) .& (data_class .== dc))
+            end
+       end
+    end
+
+    @series begin
+        seriestype := :contour
+        levels := [0]
+        linewidth := 2
+        color := :black
+        cbar:= false
+        grid_range, grid_range, grid_scores
+    end
+end
