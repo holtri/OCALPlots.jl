@@ -21,7 +21,7 @@ function get_legend_text(l, dc)
     end
 end
 
-@recipe function plot_svdd(m::SVDD.SVDDClassifier, labels::Vector{Symbol}; grid_resolution = 100, axis_overhang = 0.2)
+@recipe function plot_svdd(m::SVDD.SVDDClassifier, labels::Vector{Symbol}; grid_resolution = 100, axis_overhang = 0.2, db_color=:black)
     grid_range, grid_data = get_grid(extrema(m.data)..., grid_resolution, axis_overhang)
     grid_scores = reshape(SVDD.predict(m, grid_data), grid_resolution, grid_resolution)
     data_class = SVDD.classify.(SVDD.predict(m, m.data))
@@ -54,8 +54,8 @@ end
     @series begin
         seriestype := :contour
         levels := [0]
-        linewidth := 2
-        seriescolor := :black
+        linewidth := 3
+        seriescolor := [db_color]
         cbar:= false
         grid_range, grid_range, grid_scores
     end
@@ -143,7 +143,7 @@ end
     end
 end
 
-@recipe function plot_svdd(m::SVDD.SubSVDD, labels::Vector{Symbol}, subspace_idx; grid_resolution = 100, axis_overhang = 0.2)
+@recipe function plot_svdd(m::SVDD.SubSVDD, labels::Vector{Symbol}, subspace_idx; grid_resolution = 100, axis_overhang = 0.2, db_color=:black)
     data = m.data[m.subspaces[subspace_idx], :]
     grid_range, grid_data = OCALPlots.get_grid(extrema(data)..., grid_resolution, axis_overhang)
     grid_scores = reshape(SVDD.predict(m, grid_data, subspace_idx), grid_resolution, grid_resolution)
@@ -178,8 +178,8 @@ end
     @series begin
         seriestype := :contour
         levels := [0]
-        linewidth := 2
-        seriescolor := :black
+        linewidth := 3
+        seriescolor := [db_color]
         cbar:= false
         grid_range, grid_range, grid_scores
     end
