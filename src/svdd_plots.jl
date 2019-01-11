@@ -55,7 +55,7 @@ end
         seriestype := :contour
         levels := [0]
         linewidth := 2
-        color := :black
+        seriescolor := :black
         cbar:= false
         grid_range, grid_range, grid_scores
     end
@@ -179,7 +179,7 @@ end
         seriestype := :contour
         levels := [0]
         linewidth := 2
-        color := :black
+        seriescolor := :black
         cbar:= false
         grid_range, grid_range, grid_scores
     end
